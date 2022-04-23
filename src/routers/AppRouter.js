@@ -12,6 +12,7 @@ import {login} from "../actions/auth";
 import { firebase } from '../firebase/firebase-config'
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
+import { startLoadingNotes} from "../actions/notes";
 
 const AppRouter = () => {
 
@@ -24,18 +25,18 @@ const AppRouter = () => {
     const [ isLoggedIn, setIsLoggedIn ] = useState(false)
 
     useEffect( () => {
-        firebase.auth().onAuthStateChanged( (user) => {
+        firebase.auth().onAuthStateChanged(  (user) => {
 
             if (user?.uid){
                 dispatch( login(user.uid, user.displayName) )
-                //se loggeo de manera correcta
                 setIsLoggedIn(true)
+                dispatch( startLoadingNotes( user.uid ) )
+
+
             }else{
-                //no se loggeo
                 setIsLoggedIn(false)
             }
 
-            //con esto digo que termine el chequeo, y ya tengo la respuesta de firebase
             setChecking(false)
 
         })
@@ -43,11 +44,9 @@ const AppRouter = () => {
     },[dispatch,setChecking,setIsLoggedIn])
 
 
-    //muestra espere.. hasta que checking cambie a false
-    //si quiero puedo agregar un componente personalizado
     if (checking) {
         return (
-            <h1>Espere....</h1>
+            <h1>Wait....</h1>
         )
     }
 

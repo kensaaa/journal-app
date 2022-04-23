@@ -1,6 +1,7 @@
 import Swal from 'sweetalert2'
 import { firebase, googleAuthProvider } from '../firebase/firebase-config'
 import {types} from "../types/types"
+import {noteLogout} from './notes'
 import {finishLoading, startLoading} from './ui'
 
 export const startLoginEmailPassword = (email,password) => {
@@ -30,7 +31,6 @@ export const startGoogleLogin = () => {
             //cualdo se resuelve la promesa me entrega un userCred con varias cosas interesantes pero,
             // solo me importa la informcion del user que esta dentro del userCred
             .then( ({ user }) => {
-                console.log(user)
                 dispatch( login(user.uid, user.displayName) )
             })
 
@@ -84,6 +84,7 @@ export const startLogout = () => {
         await firebase.auth().signOut()
 
         dispatch( logout() )
+        dispatch( noteLogout() )
     }
 }
 
