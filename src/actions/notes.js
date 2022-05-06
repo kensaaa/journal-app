@@ -24,11 +24,15 @@ export const startNewNote = () => {
             date: new Date().getTime()
         }
 
-        const doc = await db.collection(`${uid}/journal/notes`).add( newNote )
+        try{
+            const doc = await db.collection(`${uid}/journal/notes`).add( newNote )
 
-        //queremos que la  nota se active cuando se cree
-        dispatch ( activeNote(doc.id, newNote) )
-        dispatch ( addNewNote(doc.id, newNote) )
+            //queremos que la  nota se active cuando se cree
+            dispatch ( activeNote(doc.id, newNote) )
+            dispatch ( addNewNote(doc.id, newNote) )
+        }catch(err){
+            console.log(err)
+        }
         
     }
 
@@ -53,7 +57,6 @@ export const addNewNote = (id,note) => ({
 
 export const startLoadingNotes =  ( uid ) => {
     return async(dispatch) => {
-        //cargamos las notas
         const notes = await loadNotes( uid )
         dispatch( setNotes( notes ) )
     }
@@ -161,9 +164,7 @@ export const deleteNode = (id) => ({
 })
 
 
-export const noteLogout = () => ({
-    type: types.notesLogoutCleaning
-})
+export const noteLogout = () => ({ type: types.notesLogoutCleaning })
 
 
 

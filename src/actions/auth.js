@@ -8,7 +8,8 @@ export const startLoginEmailPassword = (email,password) => {
 
     return (dispatch) => {
         dispatch( startLoading() )
-        firebase.auth().signInWithEmailAndPassword(email, password)
+        //agremamos esto
+        return firebase.auth().signInWithEmailAndPassword(email, password)
             .then( ({user}) => {
 
                 dispatch( finishLoading() )
